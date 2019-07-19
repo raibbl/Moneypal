@@ -21,7 +21,18 @@ class AddScreen extends React.Component {
     //  AsyncStorage.setItem('i',i );
 
 
-    this.state = { text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '' };
+    this.state = { text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '', longitude: 0, latitude: 0 };
+  }
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          error: null
+        })
+      })
   }
 
   setName = () => {
@@ -105,6 +116,7 @@ class AddScreen extends React.Component {
 
 
   render() {
+   
     return (
       <React.Fragment>
         <View style={{ flex: 1, alignItems: "center", backgroundColor: '#fffff5' }}>
@@ -137,18 +149,18 @@ class AddScreen extends React.Component {
 
           </View>
           <MapView
-              provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-              style={{height:180,width:300}}
-              region={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.015,
-                longitudeDelta: 0.0121,
-              }}
-            >
-            </MapView>
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={{ height: 180, width: 300 }}
+            region={{
+              latitude: this.state.latitude,
+              longitude: this.state.longitude,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.0121,
+            }}
+          >
+          </MapView>
           <View style={{ flex: 1, alignItems: "flex-start", justifyContent: "space-around", backgroundColor: '#fffff5', flexDirection: "row" }}>
-           
+
           </View>
         </View>
       </React.Fragment>
