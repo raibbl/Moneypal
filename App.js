@@ -3,10 +3,11 @@
 import React from "react";
 import {
   View, Text, Button, AsyncStorage, TextInput, Alert, DatePickerAndroid,
-  TimePickerAndroid,
+  TimePickerAndroid, Picker
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator } from "react-navigation";
+import DropdownMenu from 'react-native-dropdown-menu';
 
 //for saving all transactions
 
@@ -21,7 +22,7 @@ class AddScreen extends React.Component {
     //  AsyncStorage.setItem('i',i );
 
 
-    this.state = { text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '', longitude: 0, latitude: 0 };
+    this.state = { text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '', longitude: 0, latitude: 0, pickerValue: '' };
   }
 
   componentDidMount() {
@@ -69,15 +70,12 @@ class AddScreen extends React.Component {
 
 
     //get everything from state
-    let { name } = this.state;
-    let { amount } = this.state;
-    let { budget } = this.state;
-    let { date } = this.state;
-    let { year, month, day } = this.state;
+
+    let { year, month, day, name, amount, budget, longitude, latitude } = this.state;
 
     //  console.log(name);
     trans = {
-      name, amount, budget, date, year, month, day
+      name, amount, budget, longitude, latitude, year, month, day,
     }
     //check for existing transactions
     const existingTrans = await AsyncStorage.getItem('ex')
@@ -116,7 +114,7 @@ class AddScreen extends React.Component {
 
 
   render() {
-   
+    let data = [["C", "Java", "JavaScript", "PHP"], ["Python", "Ruby"], ["Swift", "Objective-C"]];
     return (
       <React.Fragment>
         <View style={{ flex: 1, alignItems: "center", backgroundColor: '#fffff5' }}>
@@ -140,8 +138,25 @@ class AddScreen extends React.Component {
             <Button
               //style={{flex:2}}
               title="which Budget?"
-              onPress={this.setName} />
+              onPress={this.setName}
+            />
+
+            <Picker
+              selectedValue={this.state.budget}
+              style={{ height: 50, width: 100 }}
+              onValueChange={(itemValue, itemIndex) =>
+                this.setState({ budget: itemValue })
+              }>
+              <Picker.Item label="Java" value="java" />
+              <Picker.Item label="JavaScript" value="js1" />
+              <Picker.Item label="booga" value="js2" />
+              <Picker.Item label="mooga" value="js3" />
+              <Picker.Item label="mooga" value="js4" />
+              <Picker.Item label="mooga" value="js5" />
+              <Picker.Item label="mooga" value="js6" />
+            </Picker>
             <View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: '#fffff5' }} />
+
             <Button
               //style={{flex:2}}
               title='Date'
