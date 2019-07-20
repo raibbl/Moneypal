@@ -3,14 +3,32 @@
 import React from "react";
 import {
   View, Text, Button, AsyncStorage, TextInput, Alert, DatePickerAndroid,
-  TimePickerAndroid, Picker
+  TimePickerAndroid, Picker,StyleSheet
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import { createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator } from "react-navigation";
 import DropdownMenu from 'react-native-dropdown-menu';
+import LinearGradient from 'react-native-linear-gradient';
+//import { COLOR, ThemeContext, getTheme } from 'react-native-material-ui';
 
 //for saving all transactions
 
+var styles = StyleSheet.create({
+  linearGradient: {
+    flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5
+  },
+  buttonText: {
+    fontSize: 18,
+    //fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    margin: 10,
+    color: '#ffffff',
+    backgroundColor: 'transparent',
+  },
+}); 
 
 class AddScreen extends React.Component {
 
@@ -114,12 +132,16 @@ class AddScreen extends React.Component {
 
 
   render() {
-    let data = [["C", "Java", "JavaScript", "PHP"], ["Python", "Ruby"], ["Swift", "Objective-C"]];
+
     return (
       <React.Fragment>
         <View style={{ flex: 1, alignItems: "center", backgroundColor: '#fffff5' }}>
           <View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: '#fffff5' }} />
-
+          <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
+            <Text style={styles.buttonText}>
+              Sign in with Facebook
+              </Text>
+          </LinearGradient>
           <Button
             style={{ flex: 2 }}
             title='Save expense'
@@ -133,19 +155,24 @@ class AddScreen extends React.Component {
             placeholder="Amount"
             onChangeText={amount => this.setState({ amount })} />
 
+          <Button
+            //style={{flex:2}}
+            title='Date'
+            onPress={this.saveDate} />
 
-          <View style={{ flex: 1, alignItems: "flex-start", justifyContent: "space-around", backgroundColor: '#fffff5', flexDirection: "row" }}>
-            <Button
-              //style={{flex:2}}
-              title="which Budget?"
-              onPress={this.setName}
-            />
 
+
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "space-evenly", backgroundColor: '#fffff5', flexDirection: "row" }}>
+
+
+            <Text style={{ color: 'yellow' }}>Select your own Budget:</Text>
             <Picker
-              selectedValue={this.state.budget}
+
+
               style={{ height: 50, width: 100 }}
               onValueChange={(itemValue, itemIndex) =>
                 this.setState({ budget: itemValue })
+                //<View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: '#fffff5' }} />
               }>
               <Picker.Item label="Java" value="java" />
               <Picker.Item label="JavaScript" value="js1" />
@@ -154,13 +181,11 @@ class AddScreen extends React.Component {
               <Picker.Item label="mooga" value="js4" />
               <Picker.Item label="mooga" value="js5" />
               <Picker.Item label="mooga" value="js6" />
-            </Picker>
-            <View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: '#fffff5' }} />
 
-            <Button
-              //style={{flex:2}}
-              title='Date'
-              onPress={this.saveDate} />
+            </Picker>
+
+
+
 
           </View>
           <MapView
@@ -184,6 +209,7 @@ class AddScreen extends React.Component {
 
 
 }
+
 
 
 class HomeScreen extends React.Component {
