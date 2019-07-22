@@ -2,33 +2,30 @@
 
 import React from "react";
 import {
-  View, Text, Button, AsyncStorage, TextInput, Alert, DatePickerAndroid,
-  TimePickerAndroid, Picker,StyleSheet
+  View, Text, AsyncStorage, TextInput, Alert, DatePickerAndroid,
+  TimePickerAndroid, Picker, StyleSheet, Dimensions
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE, Callout } from 'react-native-maps'
 import { createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator } from "react-navigation";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import DropdownMenu from 'react-native-dropdown-menu';
-import LinearGradient from 'react-native-linear-gradient';
+//import { MaterialIcons } from '@expo/vector-icons'; 
+//import { MaterialIcons } from '@expo/vector-icons'; 
+import { DefaultTheme, Button, Appbar, Title, Provider as PaperProvider } from 'react-native-paper';
+
+//import LinearGradient from 'react-native-linear-gradient';
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart
+} from 'react-native-chart-kit'
 //import { COLOR, ThemeContext, getTheme } from 'react-native-material-ui';
 
 //for saving all transactions
 
-var styles = StyleSheet.create({
-  linearGradient: {
-    flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 5
-  },
-  buttonText: {
-    fontSize: 18,
-    //fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    margin: 10,
-    color: '#ffffff',
-    backgroundColor: 'transparent',
-  },
-}); 
 
 class AddScreen extends React.Component {
 
@@ -40,10 +37,11 @@ class AddScreen extends React.Component {
     //  AsyncStorage.setItem('i',i );
 
 
-    this.state = { text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '', longitude: 0, latitude: 0, pickerValue: '' };
+    this.state = { fontsAreLoaded: false, text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '', longitude: 0, latitude: 0, pickerValue: '' };
   }
 
-  componentDidMount() {
+
+  async componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       position => {
         this.setState({
@@ -52,6 +50,7 @@ class AddScreen extends React.Component {
           error: null
         })
       })
+    await Font.loadAsync(MaterialIcons.font)
   }
 
   setName = () => {
@@ -134,76 +133,104 @@ class AddScreen extends React.Component {
   render() {
 
     return (
-      <React.Fragment>
-        <View style={{ flex: 1, alignItems: "center", backgroundColor: '#fffff5' }}>
-          <View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: '#fffff5' }} />
-          <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.linearGradient}>
-            <Text style={styles.buttonText}>
-              Sign in with Facebook
-              </Text>
-          </LinearGradient>
-          <Button
-            style={{ flex: 2 }}
-            title='Save expense'
-            onPress={this.SavetoGlobalTransaction} />
-          <TextInput
-            style={{ flex: 1 }}
-            placeholder="Name of expense"
-            onChangeText={name => this.setState({ name })} />
-          <TextInput
-            style={{ flex: 1 }}
-            placeholder="Amount"
-            onChangeText={amount => this.setState({ amount })} />
 
-          <Button
-            //style={{flex:2}}
-            title='Date'
-            onPress={this.saveDate} />
+
+      <PaperProvider>
+        <React.Fragment>
+
+          <View style={{ flex: 1, alignItems: "center", backgroundColor: 'white' }}>
+            <View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: 'white' }} />
+            <Button onPress={this.SavetoGlobalTransaction}>
+              Save expense
+            </Button>
+            <TextInput
+              style={{ flex: 1 }}
+              placeholder="Name of expense"
+              onChangeText={name => this.setState({ name })} />
+            <TextInput
+              style={{ flex: 1 }}
+              placeholder="Amount"
+              onChangeText={amount => this.setState({ amount })} />
+
+            <Button onPress={this.saveDate} >
+              Date of transaction
+            </Button>
 
 
 
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "space-evenly", backgroundColor: '#fffff5', flexDirection: "row" }}>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "space-evenly", backgroundColor: 'white', flexDirection: "row" }}>
 
 
-            <Text style={{ color: 'yellow' }}>Select your own Budget:</Text>
-            <Picker
+              <Button disabled='true'>
+                Category
+              </Button>
+              <Picker
 
 
-              style={{ height: 50, width: 100 }}
-              onValueChange={(itemValue, itemIndex) =>
-                this.setState({ budget: itemValue })
-                //<View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: '#fffff5' }} />
-              }>
-              <Picker.Item label="Java" value="java" />
-              <Picker.Item label="JavaScript" value="js1" />
-              <Picker.Item label="booga" value="js2" />
-              <Picker.Item label="mooga" value="js3" />
-              <Picker.Item label="mooga" value="js4" />
-              <Picker.Item label="mooga" value="js5" />
-              <Picker.Item label="mooga" value="js6" />
+                style={{ height: 50, width: 100 }}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.setState({ budget: itemValue })
+                  //<View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: 'white' }} />
+                }>
+                <Picker.Item label="Java" value="java" />
+                <Picker.Item label="JavaScript" value="js1" />
+                <Picker.Item label="booga" value="js2" />
+                <Picker.Item label="mooga" value="js3" />
+                <Picker.Item label="mooga" value="js4" />
+                <Picker.Item label="mooga" value="js5" />
+                <Picker.Item label="mooga" value="js6" />
 
-            </Picker>
+              </Picker>
 
 
 
+            </View>
+
+            <MapView
+              provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+              style={{ height: 250, width: 250, borderRadius: 250 / 2, }}
+              region={{
+                latitude: this.state.latitude,
+                longitude: this.state.longitude,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              }}
+
+            /*<Callout>
+            <View style={{
+              flexDirection: "row",
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
+              borderRadius: 10,
+              width: "40%",
+              marginLeft: "30%",
+              marginRight: "30%",
+              marginTop: 20
+            }} >
+              <TextInput style={{
+                borderColor: "transparent",
+                marginleft: 10,
+                width: "90%",
+                marginRight: 10,
+                height: 40,
+                borderWidth: 0.0
+              }}
+                placeholder={"Search"}
+              />
+            </View>
+          </Callout>
+          */
+            />
+
+
+
+
+            <View style={{ flex: 1, alignItems: "flex-start", justifyContent: "space-around", backgroundColor: 'white', flexDirection: "row" }}>
+
+            </View>
 
           </View>
-          <MapView
-            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-            style={{ height: 180, width: 300 }}
-            region={{
-              latitude: this.state.latitude,
-              longitude: this.state.longitude,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.0121,
-            }}
-          >
-          </MapView>
-          <View style={{ flex: 1, alignItems: "flex-start", justifyContent: "space-around", backgroundColor: '#fffff5', flexDirection: "row" }}>
-
-          </View>
-        </View>
-      </React.Fragment>
+        </React.Fragment>
+      </PaperProvider>
     );
   }
 
@@ -220,15 +247,40 @@ class HomeScreen extends React.Component {
   }
 
   render() {
+    const data = {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+      datasets: [{
+        data: [20, 45, 28, 80, 99, 43],
+        color: (opacity = 90) => `rgba(153, 0, 204, ${opacity})` // optional
+        //strokeWidth: 2 // optional
+      }]
+    }
+    const chartConfig = {
+      backgroundGradientFrom: '#ffffff',
+      backgroundGradientTo: '#ffffff',
+      color: (opacity = 90) => `rgba(153, 0, 204, ${opacity})`,
+      // strokeWidth: 2 // optional, default 3
+    }
+    const screenWidth = Dimensions.get('window').width
     return (
+      <PaperProvider>
 
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Home Screen</Text>
-        <Button
-          title="Add Expense"
-          onPress={() => this.props.navigation.navigate('Add')}
-        />
-      </View>
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <View style={{flex: 1}} />
+          <BarChart
+            data={data}
+            width={screenWidth}
+            height={220}
+            chartConfig={chartConfig}
+            bezier
+          />
+          <View style={{flex: 1}} />
+          <Button onPress={() => this.props.navigation.navigate('Add')} >
+            Add expense
+          </Button>
+          <View style={{flex: 1}} />
+        </View>
+      </PaperProvider>
     );
   }
 }
@@ -237,11 +289,12 @@ class atest extends React.Component {
 
   render() {
     return (
+      <PaperProvider>
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+          <Text>aScreen</Text>
 
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>aScreen</Text>
-
-      </View>
+        </View>
+      </PaperProvider>
     );
   }
 }
@@ -265,7 +318,13 @@ const AppNavigator = createStackNavigator({
   Add: {
     screen: AddScreen,
     navigationOptions: {
-      header: null
+      title: 'Go back',
+      headerStyle: {
+        backgroundColor: '#da70d6 ',
+        elevation: null,
+
+      },
+
     }
   },
   tab: {
@@ -288,10 +347,12 @@ const AppContain = createAppContainer(AppNavigator);
 
 
 
-export default class App extends React.Component {
+class App extends React.Component {
 
 
   render() {
+
     return <AppContain />;
   }
 }
+export default App;

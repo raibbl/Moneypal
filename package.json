@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@expo/samples": "~3.0.0",
-    "@expo/vector-icons": "^10.0.1",
+    "@expo/vector-icons": "^10.0.3",
     "@react-navigation/web": "^1.0.0-alpha.9",
     "expo": "^33.0.0",
     "expo-asset": "^5.0.0",
@@ -23,12 +23,20 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-native": "^0.60.4",
+    "react-native-chart-kit": "^3.1.0",
     "react-native-dropdown-menu": "^2.0.0",
     "react-native-enhanced-popup-menu": "^0.6.1",
     "react-native-linear-gradient": "^2.5.4",
     "react-native-material-ui": "^1.30.1",
+    "react-native-paper": "^2.16.0",
+    "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.0"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
   },
   "devDependencies": {
     "babel-preset-expo": "^5.1.0",
