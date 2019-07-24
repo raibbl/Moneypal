@@ -5,9 +5,11 @@ import {
   View, Text, AsyncStorage, TextInput, Alert, DatePickerAndroid,
   TimePickerAndroid, Picker, StyleSheet, Dimensions
 } from "react-native";
+import { AppLoading, Asset, Font, Icon } from 'expo';
 import MapView, { PROVIDER_GOOGLE, Callout } from 'react-native-maps'
 import { createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator } from "react-navigation";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+//import { MaterialIcons } from '@expo/vector-icons'
+//import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import DropdownMenu from 'react-native-dropdown-menu';
 //import { MaterialIcons } from '@expo/vector-icons'; 
 //import { MaterialIcons } from '@expo/vector-icons'; 
@@ -37,7 +39,7 @@ class AddScreen extends React.Component {
     //  AsyncStorage.setItem('i',i );
 
 
-    this.state = { fontsAreLoaded: false, text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '', longitude: 0, latitude: 0, pickerValue: '' };
+    this.state = { fontsLoaded: false, text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '', longitude: 0, latitude: 0, pickerValue: '' };
   }
 
 
@@ -50,7 +52,8 @@ class AddScreen extends React.Component {
           error: null
         })
       })
-    await Font.loadAsync(MaterialIcons.font)
+    await Expo.Font.loadAsync({'Material Design Icons':require('./assets/fonts/MaterialIcons.ttf')});
+    this.setState({fontsLoaded:true});
   }
 
   setName = () => {
@@ -137,7 +140,7 @@ class AddScreen extends React.Component {
 
       <PaperProvider>
         <React.Fragment>
-
+          <Appbar> <Appbar.Action icon="mail"/></Appbar>
           <View style={{ flex: 1, alignItems: "center", backgroundColor: 'white' }}>
             <View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: 'white' }} />
             <Button onPress={this.SavetoGlobalTransaction}>

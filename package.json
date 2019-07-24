@@ -22,7 +22,7 @@
     "expo-web-browser": "^5.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-native": "^0.60.4",
+    "react-native": "^0.59.8",
     "react-native-chart-kit": "^3.1.0",
     "react-native-dropdown-menu": "^2.0.0",
     "react-native-enhanced-popup-menu": "^0.6.1",
