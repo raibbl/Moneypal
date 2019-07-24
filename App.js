@@ -6,6 +6,7 @@ import {
   TimePickerAndroid, Picker, StyleSheet, Dimensions
 } from "react-native";
 import { AppLoading, Asset, Font, Icon } from 'expo';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import MapView, { PROVIDER_GOOGLE, Callout } from 'react-native-maps'
 import { createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator } from "react-navigation";
 //import { MaterialIcons } from '@expo/vector-icons'
@@ -14,6 +15,7 @@ import DropdownMenu from 'react-native-dropdown-menu';
 //import { MaterialIcons } from '@expo/vector-icons'; 
 //import { MaterialIcons } from '@expo/vector-icons'; 
 import { DefaultTheme, Button, Appbar, Title, Provider as PaperProvider } from 'react-native-paper';
+
 
 //import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -39,7 +41,7 @@ class AddScreen extends React.Component {
     //  AsyncStorage.setItem('i',i );
 
 
-    this.state = { fontsLoaded: false, text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '', longitude: 0, latitude: 0, pickerValue: '' };
+    this.state = { fontLoaded: false, text: '', name: '', amount: '', budget: '', date: '', year: '', month: '', day: '', longitude: 0, latitude: 0, pickerValue: '' };
   }
 
 
@@ -52,8 +54,8 @@ class AddScreen extends React.Component {
           error: null
         })
       })
-    await Expo.Font.loadAsync({'Material Design Icons':require('./assets/fonts/MaterialIcons.ttf')});
-    this.setState({fontsLoaded:true});
+    await Expo.Font.loadAsync({ 'MaterialIcons': require('./assets/fonts/MaterialIcons.ttf') });
+    this.setState({ fontLoaded: true });
   }
 
   setName = () => {
@@ -140,7 +142,10 @@ class AddScreen extends React.Component {
 
       <PaperProvider>
         <React.Fragment>
-          <Appbar> <Appbar.Action icon="mail"/></Appbar>
+          <Appbar>
+            <Appbar.BackAction  onPress={() => this.props.navigation.navigate('Home')}/>
+            <Appbar.Content title='Go Back' />
+          </Appbar>
           <View style={{ flex: 1, alignItems: "center", backgroundColor: 'white' }}>
             <View style={{ height: 40, width: 40, alignItems: "center", justifyContent: "space-evenly", backgroundColor: 'white' }} />
             <Button onPress={this.SavetoGlobalTransaction}>
@@ -164,7 +169,7 @@ class AddScreen extends React.Component {
             <View style={{ flex: 1, alignItems: "center", justifyContent: "space-evenly", backgroundColor: 'white', flexDirection: "row" }}>
 
 
-              <Button disabled='true'>
+              <Button disabled={false}>
                 Category
               </Button>
               <Picker
@@ -259,8 +264,8 @@ class HomeScreen extends React.Component {
       }]
     }
     const chartConfig = {
-      backgroundGradientFrom: '#ffffff',
-      backgroundGradientTo: '#ffffff',
+      backgroundGradientFrom: '#F6F6F6',
+      backgroundGradientTo: '#F6F6F6',
       color: (opacity = 90) => `rgba(153, 0, 204, ${opacity})`,
       // strokeWidth: 2 // optional, default 3
     }
@@ -269,7 +274,7 @@ class HomeScreen extends React.Component {
       <PaperProvider>
 
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <View style={{flex: 1}} />
+          <View style={{ flex: 1 }} />
           <BarChart
             data={data}
             width={screenWidth}
@@ -277,11 +282,11 @@ class HomeScreen extends React.Component {
             chartConfig={chartConfig}
             bezier
           />
-          <View style={{flex: 1}} />
+          <View style={{ flex: 1 }} />
           <Button onPress={() => this.props.navigation.navigate('Add')} >
             Add expense
           </Button>
-          <View style={{flex: 1}} />
+          <View style={{ flex: 1 }} />
         </View>
       </PaperProvider>
     );
@@ -304,16 +309,23 @@ class atest extends React.Component {
 
 
 
-const Tabnavi = createBottomTabNavigator({
+const Tabnavi = createMaterialBottomTabNavigator({
 
-  Home: HomeScreen,
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: () => ({
+      icon:'music'
+    })},
   A: atest
 
 },
   {
-    header: 'null'
+    
+    header: 'null',
+    activeColor: '#F44336',
   }
 )
+
 
 
 const AppNavigator = createStackNavigator({
@@ -321,6 +333,7 @@ const AppNavigator = createStackNavigator({
   Add: {
     screen: AddScreen,
     navigationOptions: {
+      header: null,
       title: 'Go back',
       headerStyle: {
         backgroundColor: '#da70d6 ',
@@ -355,7 +368,16 @@ class App extends React.Component {
 
   render() {
 
-    return <AppContain />;
+    return (
+      <PaperProvider>
+        <AppContain
+          ref={AppNavigator => {
+            this.navigator = AppNavigator;
+          }}
+        />
+      </PaperProvider>
+    );
+
   }
 }
 export default App;
