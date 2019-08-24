@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "packagerPort": null,
-  "packagerPid": null,
+  "packagerPort": 19001,
+  "packagerPid": 8920,
   "expoServerNgrokUrl": "https://ur-42u.raibbl.moneypal.exp.direct",
   "packagerNgrokUrl": "https://packager.ur-42u.raibbl.moneypal.exp.direct",
-  "ngrokPid": 5264,
+  "ngrokPid": 10976,
   "webpackServerPort": null
 }
