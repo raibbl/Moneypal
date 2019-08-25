@@ -27,7 +27,7 @@ import {
   StackedBarChart
 } from 'react-native-chart-kit'
 //import { COLOR, ThemeContext, getTheme } from 'react-native-material-ui';
-
+import atest from './screens/atest'
 //for saving all transactions
 
 
@@ -408,7 +408,7 @@ rendernameoftrans () {
   }
 }
 
-class atest extends React.Component {
+/*class atest extends React.Component {
 
   render() {
     return (
@@ -422,7 +422,7 @@ class atest extends React.Component {
   }
 }
 
-
+*/
 
 const Tabnavi = createMaterialBottomTabNavigator({
 
