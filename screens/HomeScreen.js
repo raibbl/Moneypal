@@ -27,83 +27,62 @@ export default class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props);
-
-
-    let x = this.props.navigation.x
-    //alert(x);
     this.state = { items: [], name: [] }
 
 
 
   }
 
-  componentDidMount() {
 
-  }
-  componentDidUpdate() {
-    //this.formatData()
+  
 
-  }
-  //to return the transactions in keys
-
-
+//a fucntion to clear the presisted data in the app
   clearAsyncStorage = async () => {
     AsyncStorage.clear();
   }
 
-
+//function to get data from async storage and push into a state array in this screen
   formatData = async () => {
     let booga = '';
 
-    //const keys = await AsyncStorage.getAllKeys()
+    
     booga = await AsyncStorage.getItem('ex')
-    //const x=JSON.parse(booga);
-    // let k=x[1].name
-    // console.log( k);
+    
     let y = JSON.parse(booga);
 
-    // var myStringArray = ["Hello", "World"];
+  
     let arrayLength = y.length;
     let temparray = []
+    
     for (var i = 0; i < arrayLength; i++) {
       temparray.push(y[i]);
 
-      //Do something
+      
     }
+
     this.setState({ name: temparray })
 
 
 
 
-    //return items
-
-
-    // return booga;
-
-
-    //alert(booga[0][0]);
-
-
-  }
-
-  parseme() {
-    this.formatData();
-    let { items } = this.state;
-    //let mama =JSON.parse(items);
-    return items;
   }
 
 
+
+//the fucntion to render all the transactions in the main screen , will be used in a scroll view component
   rendernameoftrans() {
     this.formatData();
     let { name } = this.state;
     //let x =Array.from(name);
     return name.map((item) => {
       return (
-        <Text>{item.name}</Text>
+      
+        <Text>Name:{item.name} Amount:{item.amount} Month:{item.month} Day:{item.day}</Text>
       );
     });
   }
+
+
   render() {
     const data = {
       labels: ['January', 'February', 'March', 'April', 'May', 'June'],
@@ -121,19 +100,11 @@ export default class HomeScreen extends React.Component {
     }
     const screenWidth = Dimensions.get('window').width
 
-    //console.log(items);
-    //let item1 = items[0]['name'];
-    //alert(item1);
-    //let booga1 = 
-    // this.formatData()
-    let { name } = this.state
-    //let name = items[0].toString()
-    //let atest = this.parseme().toString();
-    //alert(items);
-
+    
+    
     return (
 
-      //<PaperProvider>
+      
 
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <View style={{ flex: 1 }} />
@@ -144,7 +115,7 @@ export default class HomeScreen extends React.Component {
           height={220}
           chartConfig={chartConfig}
           bezier
-        //<Text>Name:{items.name} Amount:{items.amount} Month:{items.month} Day:{items.day}</Text>
+        
         />
 
 
@@ -167,7 +138,7 @@ export default class HomeScreen extends React.Component {
         <View style={{ flex: 1 }} />
       </View>
 
-      //</PaperProvider>
+      
     );
   }
 }

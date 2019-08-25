@@ -1,4 +1,4 @@
-// In App.js in a new project
+//this is where the everything comes togther, React navigation is implemented here
 
 import React from "react";
 
@@ -18,7 +18,7 @@ import HomeScreen from './screens/HomeScreen'
 
 
 
-
+//this is to make a Bottom tab navigator that hilds our screens that can be accsessed from the bottom bar
 
 const Tabnavi = createMaterialBottomTabNavigator({
 
@@ -39,7 +39,7 @@ const Tabnavi = createMaterialBottomTabNavigator({
 )
 
 
-
+//this is a stack navigator that contains all the others sceens that are not in the bottom bar navigator  and the it contains the  bottom bar navigator 
 const AppNavigator = createStackNavigator({
   Home: HomeScreen,
   Add: {
@@ -69,12 +69,12 @@ const AppNavigator = createStackNavigator({
 );
 
 
-
+//this is to export all these screens and navigator we contain  them in some container 
 
 const AppContain = createAppContainer(AppNavigator);
 
 
-
+//this is where the app gets exported
 class App extends React.Component {
 
 
