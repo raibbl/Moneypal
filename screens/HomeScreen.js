@@ -1,198 +1,173 @@
-import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
+
+
+import React from "react";
 import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+  View, Text, AsyncStorage, TextInput, Alert, DatePickerAndroid,
+  TimePickerAndroid, Picker, StyleSheet, Dimensions, FlatList, ScrollView
+} from "react-native";
 
-import { MonoText } from '../components/StyledText';
 
-export default function HomeScreen() {
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart
+} from 'react-native-chart-kit'
+import { DefaultTheme, Button, Appbar, Title, Provider as PaperProvider } from 'react-native-paper';
 
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
+export default class HomeScreen extends React.Component {
+  static navigationOptions = {
+    header: {
+      visible: false,
+    }
+  }
 
-          <Text style={styles.getStartedText}>Get started by opening</Text>
 
-          <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
+  constructor(props) {
+    super(props);
 
-          <Text style={styles.getStartedText}>
-            Change this text and your app will automatically reload.
-          </Text>
-        </View>
 
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Help, it didn’t automatically reload!
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+    let x = this.props.navigation.x
+    //alert(x);
+    this.state = { items: [], name: [] }
 
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
-        </Text>
 
-        <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>
-            navigation/MainTabNavigator.js
-          </MonoText>
-        </View>
+
+  }
+
+  componentDidMount() {
+
+  }
+  componentDidUpdate() {
+    //this.formatData()
+
+  }
+  //to return the transactions in keys
+
+
+  clearAsyncStorage = async () => {
+    AsyncStorage.clear();
+  }
+
+
+  formatData = async () => {
+    let booga = '';
+
+    //const keys = await AsyncStorage.getAllKeys()
+    booga = await AsyncStorage.getItem('ex')
+    //const x=JSON.parse(booga);
+    // let k=x[1].name
+    // console.log( k);
+    let y = JSON.parse(booga);
+
+    // var myStringArray = ["Hello", "World"];
+    let arrayLength = y.length;
+    let temparray = []
+    for (var i = 0; i < arrayLength; i++) {
+      temparray.push(y[i]);
+
+      //Do something
+    }
+    this.setState({ name: temparray })
+
+
+
+
+    //return items
+
+
+    // return booga;
+
+
+    //alert(booga[0][0]);
+
+
+  }
+
+  parseme() {
+    this.formatData();
+    let { items } = this.state;
+    //let mama =JSON.parse(items);
+    return items;
+  }
+
+
+  rendernameoftrans() {
+    this.formatData();
+    let { name } = this.state;
+    //let x =Array.from(name);
+    return name.map((item) => {
+      return (
+        <Text>{item.name}</Text>
+      );
+    });
+  }
+  render() {
+    const data = {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+      datasets: [{
+        data: [20, 45, 28, 80, 99, 43],
+        color: (opacity = 90) => `rgba(153, 0, 204, ${opacity})` // optional
+        //strokeWidth: 2 // optional
+      }]
+    }
+    const chartConfig = {
+      backgroundGradientFrom: '#F6F6F6',
+      backgroundGradientTo: '#F6F6F6',
+      color: (opacity = 90) => `rgba(153, 0, 204, ${opacity})`,
+      // strokeWidth: 2 // optional, default 3
+    }
+    const screenWidth = Dimensions.get('window').width
+
+    //console.log(items);
+    //let item1 = items[0]['name'];
+    //alert(item1);
+    //let booga1 = 
+    // this.formatData()
+    let { name } = this.state
+    //let name = items[0].toString()
+    //let atest = this.parseme().toString();
+    //alert(items);
+
+    return (
+
+      //<PaperProvider>
+
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <View style={{ flex: 1 }} />
+
+        <BarChart
+          data={data}
+          width={screenWidth}
+          height={220}
+          chartConfig={chartConfig}
+          bezier
+        //<Text>Name:{items.name} Amount:{items.amount} Month:{items.month} Day:{items.day}</Text>
+        />
+
+
+        <View style={{ flex: 1 }} />
+
+        <Button onPress={() => this.props.navigation.navigate('Add')} >
+          Add expense
+          </Button>
+        <Button onPress={this.clearAsyncStorage} >
+          Clear Data
+            </Button>
+        <ScrollView>
+
+          {this.rendernameoftrans()}
+
+
+
+
+        </ScrollView>
+        <View style={{ flex: 1 }} />
       </View>
-    </View>
-  );
-}
 
-HomeScreen.navigationOptions = {
-  header: null,
-};
-
-function DevelopmentModeNotice() {
-  if (__DEV__) {
-    const learnMoreButton = (
-      <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-        Learn more
-      </Text>
-    );
-
-    return (
-      <Text style={styles.developmentModeText}>
-        Development mode is enabled: your app will be slower but you can use
-        useful development tools. {learnMoreButton}
-      </Text>
-    );
-  } else {
-    return (
-      <Text style={styles.developmentModeText}>
-        You are not in development mode: your app will run at full speed.
-      </Text>
+      //</PaperProvider>
     );
   }
 }
-
-function handleLearnMorePress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/development-mode/'
-  );
-}
-
-function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
-});
