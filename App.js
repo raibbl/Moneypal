@@ -264,7 +264,7 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.formatData();
+   
     let x = this.props.navigation.x
     //alert(x);
     this.state = { items: [], name: [] }
@@ -331,6 +331,7 @@ class HomeScreen extends React.Component {
 
   
 rendernameoftrans () {
+  this.formatData();
   let {name} = this.state;
   //let x =Array.from(name);
   return name.map((item) => {
