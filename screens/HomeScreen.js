@@ -84,10 +84,22 @@ export default class HomeScreen extends React.Component {
 
 
   render() {
+
+
+    //get the expenses and format them into an array just to get numbers data 
+    let { name } = this.state;
+    const numbers = [];
+    let arrayLength = name.length;
+    for (var i = 0; i < arrayLength; i++) {
+      numbers.push(name[i].amount);
+
+      
+    }
+    //graph data 
     const data = {
       labels: ['January', 'February', 'March', 'April', 'May', 'June'],
       datasets: [{
-        data: [20, 45, 28, 80, 99, 43],
+        data: numbers,
         color: (opacity = 90) => `rgba(153, 0, 204, ${opacity})` // optional
         //strokeWidth: 2 // optional
       }]
