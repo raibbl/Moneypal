@@ -5,17 +5,16 @@ import {
   View, Text, AsyncStorage, TextInput, Alert, DatePickerAndroid,
   TimePickerAndroid, Picker, StyleSheet, Dimensions, FlatList, ScrollView
 } from "react-native";
-export default class  atest extends React.Component {
+export default class atest extends React.Component {
 
-    render() {
-      return (
-        <PaperProvider>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text>aScreen</Text>
-  
-          </View>
-        </PaperProvider>
-      );
-    }
+  render() {
+    return (
+      <PaperProvider>
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+          <Text>aScreen</Text>
+
+        </View>
+      </PaperProvider>
+    );
   }
-  
+}

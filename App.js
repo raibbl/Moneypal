@@ -49,7 +49,8 @@ const AppNavigator = createStackNavigator({
       title: 'Go back',
       headerStyle: {
         backgroundColor: '#da70d6 ',
-        elevation: null,
+        elevation: 0,
+        height:100
 
       },
 
@@ -58,7 +59,8 @@ const AppNavigator = createStackNavigator({
   tab: {
     screen: Tabnavi,
     navigationOptions: {
-      header: null
+      header: null,
+      
     }
   }
 },
