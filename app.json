@@ -23,8 +23,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "money.pal"
     },
-    "description": ""
+    "description": "",
+    "android": {
+      "package": "money.pal"
+    }
   }
 }

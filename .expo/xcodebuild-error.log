@@ -1,0 +1,6 @@
+** BUILD FAILED **
+
+
+The following build commands failed:
+	CompileC /Users/raedibrahim/Library/Developer/Xcode/DerivedData/MoneyPal-arjxfnwkazgehjgaalmwncxrbeht/Build/Intermediates.noindex/Pods.build/Debug-iphonesimulator/React-Core.build/Objects-normal/arm64/RCTCxxBridge.o /Users/raedibrahim/Documents/GitHub/Moneypal/node_modules/react-native/React/CxxBridge/RCTCxxBridge.mm normal arm64 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler (in target 'React-Core' from project 'Pods')
+(1 failure)
