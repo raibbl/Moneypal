@@ -1,5 +1,6 @@
 import { mount } from 'enzyme';
 import React from 'react';
+
 import { LinearGradient } from '..';
 
 it(`renders a complex gradient`, () => {
@@ -13,6 +14,9 @@ it(`renders a complex gradient`, () => {
   );
 
   expect(
-    component.find('ViewManagerAdapter_ExpoLinearGradient').prop('proxiedProperties')
+    component
+      .find('ViewManagerAdapter_ExpoLinearGradient')
+      .first()
+      .prop('proxiedProperties')
   ).toMatchSnapshot();
 });

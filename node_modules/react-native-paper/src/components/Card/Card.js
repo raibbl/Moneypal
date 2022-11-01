@@ -10,15 +10,16 @@ import {
 import CardContent from './CardContent';
 import CardActions from './CardActions';
 import CardCover from './CardCover';
+import CardTitle from './CardTitle';
 import Surface from '../Surface';
 import { withTheme } from '../../core/theming';
 import type { Theme } from '../../types';
 
-type Props = {
+type Props = React.ElementConfig<typeof Surface> & {|
   /**
    * Resting elevation of the card which controls the drop shadow.
    */
-  elevation?: number,
+  elevation: number,
   /**
    * Function to execute on long press.
    */
@@ -36,7 +37,15 @@ type Props = {
    * @optional
    */
   theme: Theme,
-};
+  /**
+   * Pass down testID from card props to touchable
+   */
+  testID?: string,
+  /**
+   * Pass down accessible from card props to touchable
+   */
+  accessible?: boolean,
+|};
 
 type State = {
   elevation: Animated.Value,
@@ -53,10 +62,11 @@ type State = {
  * ## Usage
  * ```js
  * import * as React from 'react';
- * import { Button, Card, Title, Paragraph } from 'react-native-paper';
+ * import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
  *
  * const MyComponent = () => (
  *   <Card>
+ *     <Card.Title title="Card Title" subtitle="Card Subtitle" left={(props) => <Avatar.Icon {...props} icon="folder" />} />
  *     <Card.Content>
  *       <Title>Card title</Title>
  *       <Paragraph>Card content</Paragraph>
@@ -79,13 +89,14 @@ class Card extends React.Component<Props, State> {
   static Actions = CardActions;
   // @component ./CardCover.js
   static Cover = CardCover;
+  // @component ./CardTitle.js
+  static Title = CardTitle;
 
   static defaultProps = {
     elevation: 1,
   };
 
   state = {
-    /* $FlowFixMe: somehow default props are not respected */
     elevation: new Animated.Value(this.props.elevation),
   };
 
@@ -98,14 +109,23 @@ class Card extends React.Component<Props, State> {
 
   _handlePressOut = () => {
     Animated.timing(this.state.elevation, {
-      /* $FlowFixMe: somehow default props are not respected */
       toValue: this.props.elevation,
       duration: 150,
     }).start();
   };
 
   render() {
-    const { children, onLongPress, onPress, style, theme } = this.props;
+    const {
+      children,
+      elevation: cardElevation,
+      onLongPress,
+      onPress,
+      style,
+      theme,
+      testID,
+      accessible,
+      ...rest
+    } = this.props;
     const { elevation } = this.state;
     const { roundness } = theme;
     const total = React.Children.count(children);
@@ -117,7 +137,10 @@ class Card extends React.Component<Props, State> {
           : null
     );
     return (
-      <Surface style={[{ borderRadius: roundness, elevation }, style]}>
+      <Surface
+        style={[{ borderRadius: roundness, elevation }, style]}
+        {...rest}
+      >
         <TouchableWithoutFeedback
           delayPressIn={0}
           disabled={!(onPress || onLongPress)}
@@ -125,6 +148,8 @@ class Card extends React.Component<Props, State> {
           onPress={onPress}
           onPressIn={onPress ? this._handlePressIn : undefined}
           onPressOut={onPress ? this._handlePressOut : undefined}
+          testID={testID}
+          accessible={accessible}
         >
           <View style={styles.innerContainer}>
             {React.Children.map(

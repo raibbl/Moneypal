@@ -36,6 +36,8 @@ CGFloat const RNSVG_DEFAULT_FONT_SIZE = 12;
 {
     if (self = [super init]) {
         self.opacity = 1;
+        self.opaque = false;
+        self.matrix = CGAffineTransformIdentity;
         self.transforms = CGAffineTransformIdentity;
         self.invTransform = CGAffineTransformIdentity;
         _merging = false;
@@ -173,6 +175,16 @@ CGFloat const RNSVG_DEFAULT_FONT_SIZE = 12;
     _name = name;
 }
 
+- (void)setDisplay:(NSString *)display
+{
+    if ([display isEqualToString:_display]) {
+        return;
+    }
+
+    [self invalidate];
+    _display = display;
+}
+
 - (void)setOpacity:(CGFloat)opacity
 {
     if (opacity == _opacity) {
@@ -254,6 +266,33 @@ CGFloat const RNSVG_DEFAULT_FONT_SIZE = 12;
     [self invalidate];
 }
 
+- (void)setMarkerStart:(NSString *)markerStart
+{
+    if ([_markerStart isEqualToString:markerStart]) {
+        return;
+    }
+    _markerStart = markerStart;
+    [self invalidate];
+}
+
+- (void)setMarkerMid:(NSString *)markerMid
+{
+    if ([_markerMid isEqualToString:markerMid]) {
+        return;
+    }
+    _markerMid = markerMid;
+    [self invalidate];
+}
+
+- (void)setMarkerEnd:(NSString *)markerEnd
+{
+    if ([_markerEnd isEqualToString:markerEnd]) {
+        return;
+    }
+    _markerEnd = markerEnd;
+    [self invalidate];
+}
+
 - (void)beginTransparencyLayer:(CGContextRef)context
 {
     if (_transparent) {
@@ -286,7 +325,9 @@ CGFloat const RNSVG_DEFAULT_FONT_SIZE = 12;
         if (_cachedClipPath) {
             CGPathRelease(_cachedClipPath);
         }
-        _cachedClipPath = CGPathRetain([_clipNode getPath:context]);
+        CGAffineTransform transform = CGAffineTransformConcat(_clipNode.matrix, _clipNode.transforms);
+        _cachedClipPath = CGPathCreateCopyByTransformingPath([_clipNode getPath:context], &transform);
+        CGPathRetain(_cachedClipPath);
         if (_clipMask) {
             CGImageRelease(_clipMask);
         }

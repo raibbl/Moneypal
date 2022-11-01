@@ -39,10 +39,13 @@
     __block CGRect bounds = CGRectNull;
 
     [self traverseSubviews:^(UIView *node) {
-        if ([node isKindOfClass:[RNSVGMask class]]) {
+        if ([node isKindOfClass:[RNSVGMask class]] || [node isKindOfClass:[RNSVGClipPath class]]) {
             // no-op
         } else if ([node isKindOfClass:[RNSVGNode class]]) {
             RNSVGNode* svgNode = (RNSVGNode*)node;
+            if (svgNode.display && [@"none" isEqualToString:svgNode.display]) {
+                return YES;
+            }
             if (svgNode.responsible && !self.svgView.responsible) {
                 self.svgView.responsible = YES;
             }
@@ -69,7 +72,9 @@
             CGContextClipToRect(context, rect);
             [svgView drawToContext:context withRect:rect];
         } else {
-            [node drawRect:rect];
+            node.hidden = false;
+            [node.layer renderInContext:context];
+            node.hidden = true;
         }
 
         return YES;
@@ -78,9 +83,15 @@
     [self setHitArea:path];
     if (!CGRectEqualToRect(bounds, CGRectNull)) {
         self.clientRect = bounds;
-        const CGRect fillBounds = CGPathGetBoundingBox(path);
-        const CGRect strokeBounds = CGPathGetBoundingBox(self.strokePath);
-        self.pathBounds = CGRectUnion(fillBounds, strokeBounds);
+        self.fillBounds = CGPathGetBoundingBox(path);
+        self.strokeBounds = CGPathGetBoundingBox(self.strokePath);
+        self.pathBounds = CGRectUnion(self.fillBounds, self.strokeBounds);
+
+        CGAffineTransform current = CGContextGetCTM(context);
+        CGAffineTransform svgToClientTransform = CGAffineTransformConcat(current, self.svgView.invInitialCTM);
+
+        self.ctm = svgToClientTransform;
+        self.screenCTM = current;
 
         CGAffineTransform transform = CGAffineTransformConcat(self.matrix, self.transforms);
         CGPoint mid = CGPointMake(CGRectGetMidX(bounds), CGRectGetMidY(bounds));
@@ -94,6 +105,11 @@
     }
 
     [self popGlyphContext];
+}
+
+- (void)drawRect:(CGRect)rect
+{
+    [self invalidate];
 }
 
 - (void)setupGlyphContext:(CGContextRef)context
@@ -140,6 +156,8 @@
         if ([node isKindOfClass:[RNSVGNode class]] && ![node isKindOfClass:[RNSVGMask class]]) {
             CGAffineTransform transform = CGAffineTransformConcat(node.matrix, node.transforms);
             CGPathAddPath(path, &transform, [node getPath:context]);
+            CGPathAddPath(path, &transform, [node markerPath]);
+            node.dirty = false;
         }
         return YES;
     }];
