@@ -1,23 +1,24 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { View } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 import { styles } from "./styles/HomeScreenStyles";
 import { ScrollView } from "react-native-gesture-handler";
 import { Card, List } from "react-native-paper";
 import { TransactionService, Transaction } from "@/services/services";
-import { useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  useEffect(() => {
-    const loadTransactions = async () => {
-      const transactionList = await TransactionService.getTransactions();
-      setTransactions(transactionList);
-    };
-
-    loadTransactions();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const loadTransactions = async () => {
+        const transactionList = await TransactionService.getTransactions();
+        setTransactions(transactionList);
+      };
+      loadTransactions();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
