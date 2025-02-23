@@ -1,1 +1,49 @@
-node_modules
+# Node modules & package locks
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Expo-specific directories
+.expo/
+.expo-shared/
+.expo/settings.json
+
+# Build artifacts
+dist/
+build/
+web-build/
+
+# Temporary files & caches
+tmp/
+temp/
+.cache/
+.expo/cache/
+.expo/packager-info.json
+
+# Logs & debugging files
+*.log
+*.lock
+
+# Metro bundler files
+.packager/
+__generated__/
+
+# iOS & Android folders (only if using managed workflow)
+ios/
+android/
+
+# System & IDE files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.sublime-workspace
+
+# Environment variables (if used)
+.env
+.env.local
+.env.production
+.env.development

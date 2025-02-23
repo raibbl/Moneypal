@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "MoneyPal",
-    "slug": "myapp2",
+    "slug": "moneypal",
+    "scheme": "moneypal",
     "privacy": "public",
     "platforms": [
       "ios",
@@ -26,9 +27,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "money.pal"
     },
-    "description": "",
     "android": {
       "package": "money.pal"
-    }
+    },
+    "web": {},
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

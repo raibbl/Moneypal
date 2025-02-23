@@ -1,97 +1,72 @@
-//this is where the everything comes togther, React navigation is implemented here
-
+// Main App file where everything comes together
 import React from "react";
 
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
+// Navigation imports (Updated)
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
 
-import { createStackNavigator, createAppContainer, createBottomTabNavigator, createSwitchNavigator } from "react-navigation";
+// UI Components
+import {
+  DefaultTheme,
+  Button,
+  Appbar,
+  Title,
+  Provider as PaperProvider,
+} from "react-native-paper";
 
-import { DefaultTheme, Button, Appbar, Title, Provider as PaperProvider } from 'react-native-paper';
+// Screens
+import atest from "./screens/atest";
+import AddScreen from "./screens/AddScreen";
+import HomeScreen from "./screens/HomeScreen";
 
+// Create Bottom Tab Navigator
+const Tab = createMaterialBottomTabNavigator();
 
-import atest from './screens/atest'
-import AddScreen from './screens/AddScreen'
-import HomeScreen from './screens/HomeScreen'
-
-
-
-
-
-
-//this is to make a Bottom tab navigator that hilds our screens that can be accsessed from the bottom bar
-
-const Tabnavi = createMaterialBottomTabNavigator({
-
-  Home: {
-    screen: HomeScreen,
-    navigationOptions: () => ({
-      icon: 'music'
-    })
-  },
-  A: atest
-
-},
-  {
-
-    header: 'null',
-    activeColor: '#F44336',
-  }
-)
-
-
-//this is a stack navigator that contains all the others sceens that are not in the bottom bar navigator  and the it contains the  bottom bar navigator 
-const AppNavigator = createStackNavigator({
-  Home: HomeScreen,
-  Add: {
-    screen: AddScreen,
-    navigationOptions: {
-      header: null,
-      title: 'Go back',
-      headerStyle: {
-        backgroundColor: '#da70d6 ',
-        elevation: 0,
-        height:100
-
-      },
-
-    }
-  },
-  tab: {
-    screen: Tabnavi,
-    navigationOptions: {
-      header: null,
-      
-    }
-  }
-},
-  {
-    initialRouteName: "tab"
-  },
-
-);
-
-
-//this is to export all these screens and navigator we contain  them in some container 
-
-const AppContain = createAppContainer(AppNavigator);
-
-
-//this is where the app gets exported
-class App extends React.Component {
-
-
-  render() {
-
-    return (
-      <PaperProvider>
-        <AppContain
-          ref={AppNavigator => {
-            this.navigator = AppNavigator;
-          }}
-        />
-      </PaperProvider>
-    );
-
-  }
+function TabNavigator() {
+  return (
+    <Tab.Navigator
+      activeColor="#F44336"
+      barStyle={{ backgroundColor: "white" }}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="A" component={atest} />
+    </Tab.Navigator>
+  );
 }
-export default App;
+
+// Create Stack Navigator
+const Stack = createStackNavigator();
+
+function AppNavigator() {
+  return (
+    <Stack.Navigator initialRouteName="Tab">
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="Add"
+        component={AddScreen}
+        options={{
+          title: "Go Back",
+          headerStyle: { backgroundColor: "#da70d6", height: 100 },
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Tab"
+        component={TabNavigator}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// Main App Component
+export default function App() {
+  return (
+    <PaperProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </PaperProvider>
+  );
+}
