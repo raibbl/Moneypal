@@ -1,26 +1,28 @@
-// Main App file where everything comes together
 import React from "react";
-
 import "@expo/metro-runtime";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
-
-// UI Components
-import { Provider as PaperProvider } from "react-native-paper";
-
-// Screens
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from "@react-navigation/stack";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Text } from "react-native";
 import Atest from "./screens/Atest";
 import HomeScreen from "./screens/HomeScreen";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AddTransaction } from "./screens/AddTransaction";
 
-// Create Bottom Tab Navigator
-
+// Create Navigators
 const Tabs = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-// Inside TabNavigator component
+export type Screens = {
+  TestScreen: undefined;
+  AddTransaction: undefined;
+};
 
 function TabNavigator() {
+  const navigation = useNavigation<StackNavigationProp<Screens>>();
   return (
     <Tabs.Navigator
       screenOptions={{
@@ -32,16 +34,25 @@ function TabNavigator() {
         name="Transactions"
         component={HomeScreen}
         options={{
+          tabBarLabel: "Home",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
+          headerRight: () => (
+            <MaterialCommunityIcons
+              style={{ marginRight: 20 }}
+              name="plus"
+              onPress={() => navigation.navigate("AddTransaction")}
+              size={26}
+            />
           ),
         }}
       />
       <Tabs.Screen
-        name="testScreen"
+        name="TestScreen"
         component={Atest}
         options={{
-          tabBarLabel: "Test Screen",
+          tabBarLabel: "Test",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="test-tube-empty"
@@ -55,38 +66,37 @@ function TabNavigator() {
   );
 }
 
-// Create Stack Navigator
-const Stack = createStackNavigator();
-
 function AppNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Tab">
-      <Stack.Screen name="Home" component={HomeScreen} />
-      {/* <Stack.Screen
-      name="Add"
-      component={AddScreen}
-      options={{
-        title: "Go Back",
-        headerStyle: { backgroundColor: "#da70d6", height: 100 },
-        headerShown: false,
-      }}
-      /> */}
+    <Stack.Navigator>
       <Stack.Screen
-        name="Tab"
+        name="TabNavigator"
         component={TabNavigator}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddTransaction"
+        component={AddTransaction}
+        options={{
+          title: "Add Transaction",
+          headerRight: () => (
+            <MaterialCommunityIcons
+              style={{ marginRight: 20 }}
+              name="content-save"
+              onPress={() => alert("Add new transaction")}
+              size={26}
+            />
+          ),
+        }}
       />
     </Stack.Navigator>
   );
 }
 
-// Main App Component
 export default function App() {
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </PaperProvider>
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
   );
 }
